@@ -65,11 +65,11 @@ int main() {
   std::vector<int> vec;
   std::vector<int> vecMerge;
 
-  for (int i = 0; i < 100; i++) {
+  for (int i = 0; i < 10000; i++) {
     vec.push_back(rand() % 100);
   }
 
-  for (int i = 0; i < 100; i++) {
+  for (int i = 0; i < 10000; i++) {
     vecMerge.push_back(rand() % 100);
   }
 
