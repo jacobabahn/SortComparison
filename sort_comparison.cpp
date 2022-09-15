@@ -10,16 +10,17 @@
 #include <iostream>
 #include <vector>
 
-void insertion_sort(std::vector<int> &vec) {
-  if (vec.size() < 1) {
-    return;
-  }
-  for (int i = 0; i < vec.size() - 1; i++) {
-    for (int j = 0; j < vec.size() - i - 1; j++) {
-      if (vec[j] > vec[j + 1]) {
-        std::swap(vec[j], vec[j + 1]);
-      }
+void insertion_sort(std::vector<int> &a) {
+  int n = a.size();
+  for (int j = 1; j < n; j++) {
+    int key = a[j];
+    // Insert a[j] into the sorted sequence a[0]...a[j - 1]
+    int i = j - 1;
+    while (i >= 0 && a[i] > key) {
+      a[i + 1] = a[i];
+      i--;
     }
+    a[i + 1] = key;
   }
 }
 
@@ -61,15 +62,30 @@ void merge_sort(std::vector<int> &a) { // Call to recursive method
   merge_rec(a, 0, a.size() - 1);
 }
 
+bool is_sorted(const std::vector<int> &vec) {
+  int n = vec.size();
+  for (int i = 1; i < n; i++)
+    if (vec[i - 1] > vec[i])
+      return false;
+  return true;
+}
+
 int main() {
   std::vector<int> vec;
   std::vector<int> vecMerge;
+  int insertion_size;
+  int merge_size;
 
-  for (int i = 0; i < 10000; i++) {
+  std::cout << "Enter a number of items for the insertion_sort. ";
+  std::cin >> insertion_size;
+  std::cout << "Enter a number of items for the merge_sort. ";
+  std::cin >> merge_size;
+
+  for (int i = 0; i < insertion_size; i++) {
     vec.push_back(rand() % 100);
   }
 
-  for (int i = 0; i < 10000; i++) {
+  for (int i = 0; i < merge_size; i++) {
     vecMerge.push_back(rand() % 100);
   }
 
@@ -81,13 +97,17 @@ int main() {
   merge_sort(vecMerge);
   auto msort_end = std::chrono::high_resolution_clock::now();
 
+  if (is_sorted(vec) != true || is_sorted(vecMerge) != true) {
+    std::cout << "Sorts didn't work correctly";
+  }
+
   std::chrono::duration<double, std::milli> isort_duration =
       isort_end - isort_start;
   std::chrono::duration<double, std::milli> msort_duration =
       msort_end - msort_start;
 
   std::cout << "\nIt took insertion_sort " << isort_duration.count()
-            << " milliseconds to execute.";
+            << " milliseconds to sort " << vec.size() << " items.";
   std::cout << "\nIt took merge_sort " << msort_duration.count()
-            << " milliseconds to execute.";
+            << " milliseconds to sort " << vecMerge.size() << " items.";
 }
